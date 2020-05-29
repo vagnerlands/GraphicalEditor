@@ -3,6 +3,14 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
+// TODO:
+// 1. size of PictureNode should be according to resolution
+//    a. this means to calculate the projection for top left and bottom right
+//    b. use the calculate top left and bottom right to set the "real size"
+// 2. rename PictureNode to something more meaningful
+// 3. trackbar1. should adjust the maximum according to the panel1 sizes, adjust the current value of trackbar1 proportionally too
+
+
 namespace editor
 {
     public partial class Form1 : Form
@@ -13,24 +21,22 @@ namespace editor
         // affects how big the icons should be...
         private int mCameraToBlueprintDistance = 1;
         private bool _mustRender = false;
-
-        // all tricks are done using a orthogonal matrix
-        //GlmNet.mat4 mOrthoMat = GlmNet.mat4.identity();
-        //GlmNet.vec3 mCameraLocation = new GlmNet.vec3();
-        //GlmNet.mat4 mLookat = GlmNet.mat4.identity();
+        // all rendering properties are managed by the camera
         private Camera mCamera = new Camera();
-        //GlmNet.vec4 mViewport = new GlmNet.vec4() ;
-        //private GlmNet.mat4 mProjectionView = GlmNet.mat4.identity();
-        //private GlmNet.mat4 mWorldToCamera = GlmNet.mat4.identity();
+        // cursor icons improves iteration user x app
         private Cursor grabbing = Cursors.NoMove2D;
         private Cursor nograbbing = Cursors.Hand;
         private Cursor oldcursor = Cursors.Arrow;
+        // to calculate the dragging result 
+        // TODO: improve this, doesn't look good
         private GlmNet.vec3 previousScrPt = new GlmNet.vec3();
 
         public Form1()
         {
             InitializeComponent();
+            // database of rendering objects
             mImages = new List<object>();
+            // all picture nodes must know the panel1
             PictureNode.mBluePrint = panel1;
 
             mCamera.SetViewport(panel1.Width, panel1.Height);
@@ -38,8 +44,10 @@ namespace editor
             trackBar1.Maximum = panel1.Width - 1;
             trackBar1.Value = mCameraToBlueprintDistance;
             trackBar1.Minimum = 1;
+            trackBar1Display.Text = trackBar1.Value.ToString();
 
-            label1.Text = trackBar1.Value.ToString();
+            // adjust all component locations according to nesting relationship
+            setComponentAttributes();
 
             //refreshMatrices();
             RenderBlueprint();
@@ -159,7 +167,7 @@ namespace editor
 
         private void trackBar1_Scroll(object sender, EventArgs e)
         {
-            label1.Text = trackBar1.Value.ToString();
+            trackBar1Display.Text = trackBar1.Value.ToString();
             mCamera.MoveCameraOnZ(trackBar1.Value- mCameraToBlueprintDistance);
             mCameraToBlueprintDistance = trackBar1.Value;
             _mustRender = true;
@@ -270,5 +278,81 @@ namespace editor
             }
         }
 
+
+        private void Form1_SizeChanged(object sender, EventArgs e)
+        {
+            setComponentAttributes();
+            _mustRender = true;
+        }
+
+        private void setComponentAttributes()
+        {
+            // This form sets the position of panel1
+            // panel1 sets the position of trackBar1
+            // trackBar1 sets the position of trackBar1Display
+
+            // update panel1 size
+            panel1.Width = Size.Width - panel1.Location.X - 50;
+            panel1.Height = Size.Height - panel1.Location.Y - trackBar1.Height - 50;
+            // try to keep the panel "square"
+            if (panel1.Width > panel1.Height)
+                panel1.Width = panel1.Height;
+            else
+                panel1.Height = panel1.Width;
+
+            // update trackbar1 width and position related to 
+            trackBar1.Width = panel1.Width;
+            trackBar1.Location = new Point(panel1.Location.X, panel1.Height + 10);
+            trackBar1Display.Location = new Point(trackBar1Display.Location.X, (int)(trackBar1.Location.Y + trackBar1.Height *.25f));
+            // adjust the viewport
+            mCamera.SetViewport(panel1.Width, panel1.Height);
+        }
+
+        private void Form1_KeyUp(object sender, KeyEventArgs e)
+        {
+            keyPressed((Common.EControlKey)e.KeyValue);
+        }
+
+        private void keyPressed(Common.EControlKey keyValue)
+        {
+            if (keyValue == Common.EControlKey.ArrowUp) // up
+            {
+                mCamera.StrifeCameraOnY(5);
+            }
+            else if (keyValue == Common.EControlKey.ArrowDown) // down
+            {
+                mCamera.StrifeCameraOnY(-5);
+            }
+            else if (keyValue == Common.EControlKey.ArrowRight) // right
+            {
+                mCamera.StrifeCameraOnX(5);
+            }
+            else if (keyValue == Common.EControlKey.ArrowLeft) // left
+            {
+                mCamera.StrifeCameraOnX(-5);
+            }
+
+            _mustRender = true;
+        }
+
+        private void btnUp_Click(object sender, EventArgs e)
+        {
+            keyPressed(Common.EControlKey.ArrowUp);
+        }
+
+        private void btnDown_Click(object sender, EventArgs e)
+        {
+            keyPressed(Common.EControlKey.ArrowDown);
+        }
+
+        private void btnRight_Click(object sender, EventArgs e)
+        {
+            keyPressed(Common.EControlKey.ArrowRight);
+        }
+
+        private void btnLeft_Click(object sender, EventArgs e)
+        {
+            keyPressed(Common.EControlKey.ArrowLeft);
+        }
     }
 }
