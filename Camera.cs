@@ -13,10 +13,15 @@ namespace editor
         private vec3 mTarget;
         // up vector of the camera, for rolling orientation purposes
         private vec3 mUp;
-
+        // taking the camera location, finds the direction and orientation
+        // its looking
         private mat4 mLookAt;
+        // builds an orthographic projection matrix
         private mat4 mOrtho;
-
+        // world to camera helps to find the world coordinate from a screen pixel coordinate 
+        // it its the inverse of the lookat matrix
+        private mat4 mWorldToCamera;
+        // recalculate the matrices
         private bool mNeedToRecalculate = false;
 
         public Camera()
@@ -27,6 +32,7 @@ namespace editor
             mLookAt = mat4.identity() ;
             mViewport = new vec4(0,0,1,1);
             mOrtho = mat4.identity();
+            mWorldToCamera = mat4.identity();
             mNeedToRecalculate = true;
         }
 
@@ -122,7 +128,7 @@ namespace editor
                 int width = (int)mViewport.z;
                 int height = (int)mViewport.w;
 
-                mOrtho = GlmNet.glm.ortho(
+                mOrtho = glm.ortho(
                     -width / 2 + k,
                      width / 2 - k,
                     -height / 2 + k,
@@ -130,8 +136,34 @@ namespace editor
                      1,
                      100);
                 mLookAt = glm.lookAt(mPosition, mTarget, mUp);
+                mWorldToCamera = glm.inverse(mLookAt);
                 mNeedToRecalculate = false;
             }
+        }
+
+        /// <summary>
+        /// Find out what is the world location of a point based on current camera parameters
+        /// and the current display position
+        /// </summary>
+        /// <param name="topLeft"> top left display location [input] </param>
+        /// <param name="bottomRight"> bottom right display location [input]</param>
+        /// <param name="RealTopLeft">top left real world location [out]</param>
+        /// <param name="RealBottomRight">bottom right real world location [out]</param>
+        internal void FromPixelToWorld(vec3 topLeft, vec3 bottomRight, ref vec3 RealTopLeft, ref vec3 RealBottomRight)
+        {
+            float a, b, c, w;
+
+            a = topLeft[0] * mWorldToCamera[0][0] + topLeft[1] * mWorldToCamera[1][0] + topLeft[2] * mWorldToCamera[2][0] + mWorldToCamera[3][0];
+            b = topLeft[0] * mWorldToCamera[0][1] + topLeft[1] * mWorldToCamera[1][1] + topLeft[2] * mWorldToCamera[2][1] + mWorldToCamera[3][1];
+            c = topLeft[0] * mWorldToCamera[0][2] + topLeft[1] * mWorldToCamera[1][2] + topLeft[2] * mWorldToCamera[2][2] + mWorldToCamera[3][2];
+            w = topLeft[0] * mWorldToCamera[0][3] + topLeft[1] * mWorldToCamera[1][3] + topLeft[2] * mWorldToCamera[2][3] + mWorldToCamera[3][3];
+            RealTopLeft = new GlmNet.vec3(a / w, b / w, c / w);
+
+            a = bottomRight[0] * mWorldToCamera[0][0] + bottomRight[1] * mWorldToCamera[1][0] + bottomRight[2] * mWorldToCamera[2][0] + mWorldToCamera[3][0];
+            b = bottomRight[0] * mWorldToCamera[0][1] + bottomRight[1] * mWorldToCamera[1][1] + bottomRight[2] * mWorldToCamera[2][1] + mWorldToCamera[3][1];
+            c = bottomRight[0] * mWorldToCamera[0][2] + bottomRight[1] * mWorldToCamera[1][2] + bottomRight[2] * mWorldToCamera[2][2] + mWorldToCamera[3][2];
+            w = bottomRight[0] * mWorldToCamera[0][3] + bottomRight[1] * mWorldToCamera[1][3] + bottomRight[2] * mWorldToCamera[2][3] + mWorldToCamera[3][3];
+            RealBottomRight = new GlmNet.vec3(a / w, b / w, c / w);
         }
     }
 }

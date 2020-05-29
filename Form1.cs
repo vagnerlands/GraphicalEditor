@@ -12,7 +12,7 @@ namespace editor
         private bool mIsDraggingPanel = false;
         // affects how big the icons should be...
         private int mCameraToBlueprintDistance = 1;
-        private bool _mustRefresh = false;
+        private bool _mustRender = false;
 
         // all tricks are done using a orthogonal matrix
         //GlmNet.mat4 mOrthoMat = GlmNet.mat4.identity();
@@ -20,8 +20,8 @@ namespace editor
         //GlmNet.mat4 mLookat = GlmNet.mat4.identity();
         private Camera mCamera = new Camera();
         //GlmNet.vec4 mViewport = new GlmNet.vec4() ;
-        private GlmNet.mat4 mProjectionView = GlmNet.mat4.identity();
-        private GlmNet.mat4 mWorldToCamera = GlmNet.mat4.identity();
+        //private GlmNet.mat4 mProjectionView = GlmNet.mat4.identity();
+        //private GlmNet.mat4 mWorldToCamera = GlmNet.mat4.identity();
         private Cursor grabbing = Cursors.NoMove2D;
         private Cursor nograbbing = Cursors.Hand;
         private Cursor oldcursor = Cursors.Arrow;
@@ -41,7 +41,7 @@ namespace editor
 
             label1.Text = trackBar1.Value.ToString();
 
-            refreshMatrices();
+            //refreshMatrices();
             RenderBlueprint();
         }
 
@@ -57,7 +57,7 @@ namespace editor
                 new MouseEventHandler(panel1_MouseUp));
             // keeps a reference for manipulation, animations and so on...
             mImages.Add(newPic);
-            refreshMatrices();
+            //refreshMatrices();
             RenderBlueprint();
         }
 
@@ -102,8 +102,8 @@ namespace editor
                 System.Console.WriteLine(" Camera    : " + mCamera.GetCameraPosition().ToString());
 
                 // refresh matrices...
-                refreshMatrices();
-                _mustRefresh = true;
+                //refreshMatrices();
+                _mustRender = true;
             }
         }
 
@@ -130,7 +130,7 @@ namespace editor
                     GlmNet.vec3 unprojectedPoint1 = GlmNet.glm.unProject(
                         scrPt,
                         i.mModel,
-                        mProjectionView,
+                        mCamera.GetProjectionView(),
                         mCamera.GetViewport());
 
                     System.Console.WriteLine(" Unprojected " + unprojectedPoint1.ToString());
@@ -141,12 +141,12 @@ namespace editor
                     i.Move(new Point((int)unprojectedPoint1.x, (int)unprojectedPoint1.y), 1);
                     
                     // flags it to be updated
-                    _mustRefresh = true;
+                    _mustRender = true;
                 }
 
-                if (_mustRefresh)
+                if (_mustRender)
                 {
-                    _mustRefresh = false;
+                    _mustRender = false;
                     // converts all world space objects into screen space
                     RenderBlueprint();
                 }
@@ -162,18 +162,20 @@ namespace editor
             label1.Text = trackBar1.Value.ToString();
             mCamera.MoveCameraOnZ(trackBar1.Value- mCameraToBlueprintDistance);
             mCameraToBlueprintDistance = trackBar1.Value;
-            _mustRefresh = true;
+            _mustRender = true;
 
-            refreshMatrices();
+            //refreshMatrices();
 
         }
 
-        private void refreshMatrices()
-        {
-            mProjectionView = mCamera.GetProjectionView();
-            mWorldToCamera = GlmNet.glm.inverse(mCamera.GetLookAt());
-        }
-
+        /// <summary>
+        /// Get the Real and the Display locations of an image.
+        /// </summary>
+        /// <param name="i">An image of type PictureNode</param>
+        /// <param name="RealTopLeft">returns the top left world location of this object</param>
+        /// <param name="RealBottomRight">returns the bottom right world location of this object</param>
+        /// <param name="DisplayTopLeft">returns the top left location for display</param>
+        /// <param name="DisplayBottomRight">returns the bottom right location for display</param>
         private void GetProjectedPoint(PictureNode i, ref GlmNet.vec3 RealTopLeft, ref GlmNet.vec3 RealBottomRight, ref GlmNet.vec3 DisplayTopLeft, ref GlmNet.vec3 DisplayBottomRight)
         {
             GlmNet.vec3 topLeft = new GlmNet.vec3(i.RealLocation.X, i.RealLocation.Y, 0);
@@ -183,42 +185,25 @@ namespace editor
             DisplayTopLeft = GlmNet.glm.project(
                 topLeft,
                 i.mModel,
-                mProjectionView,
+                mCamera.GetProjectionView(),
                 mCamera.GetViewport());
 
 
             DisplayBottomRight = GlmNet.glm.project(
                 bottomRight,
                 i.mModel,
-                mProjectionView,
+                mCamera.GetProjectionView(),
                 mCamera.GetViewport());
 
-            float a, b, c, w;
+            // finds the world location of this object based on the 
+            mCamera.FromPixelToWorld(topLeft, bottomRight, ref RealTopLeft, ref RealBottomRight);
 
-            a = topLeft[0] * mWorldToCamera[0][0] + topLeft[1] * mWorldToCamera[1][0] + topLeft[2] * mWorldToCamera[2][0] + mWorldToCamera[3][0];
-            b = topLeft[0] * mWorldToCamera[0][1] + topLeft[1] * mWorldToCamera[1][1] + topLeft[2] * mWorldToCamera[2][1] + mWorldToCamera[3][1];
-            c = topLeft[0] * mWorldToCamera[0][2] + topLeft[1] * mWorldToCamera[1][2] + topLeft[2] * mWorldToCamera[2][2] + mWorldToCamera[3][2];
-            w = topLeft[0] * mWorldToCamera[0][3] + topLeft[1] * mWorldToCamera[1][3] + topLeft[2] * mWorldToCamera[2][3] + mWorldToCamera[3][3];
-            RealTopLeft = new GlmNet.vec3(a / w, b / w, c / w);
-            //GlmNet.vec2 screenpt1 = new GlmNet.vec2(
-            //    res1.x / -res1.z,
-            //    res1.y / -res1.z
-            //    );
-
-            a = bottomRight[0] * mWorldToCamera[0][0] + bottomRight[1] * mWorldToCamera[1][0] + bottomRight[2] * mWorldToCamera[2][0] + mWorldToCamera[3][0];
-            b = bottomRight[0] * mWorldToCamera[0][1] + bottomRight[1] * mWorldToCamera[1][1] + bottomRight[2] * mWorldToCamera[2][1] + mWorldToCamera[3][1];
-            c = bottomRight[0] * mWorldToCamera[0][2] + bottomRight[1] * mWorldToCamera[1][2] + bottomRight[2] * mWorldToCamera[2][2] + mWorldToCamera[3][2];
-            w = bottomRight[0] * mWorldToCamera[0][3] + bottomRight[1] * mWorldToCamera[1][3] + bottomRight[2] * mWorldToCamera[2][3] + mWorldToCamera[3][3];
-            RealBottomRight = new GlmNet.vec3(a / w, b / w, c / w);
-
-            //GlmNet.vec2 screenpt2 = new GlmNet.vec2(
-            //res2.x / -res2.z,
-            //res2.y / -res2.z
-            //);
         }
 
 
-
+        /// <summary>
+        /// Based on current camera location, render the objects according to its location.
+        /// </summary>
         private void RenderBlueprint()
         {
             // https://www.scratchapixel.com/lessons/3d-basic-rendering/computing-pixel-coordinates-of-3d-point/mathematics-computing-2d-coordinates-of-3d-points
@@ -229,10 +214,13 @@ namespace editor
                 // down-cast to picturenode - not safe
                 PictureNode i = ((PictureNode)im);
 
+                // [out parameters]
                 GlmNet.vec3 RealTopLeft = new GlmNet.vec3();
                 GlmNet.vec3 RealBottomRight = new GlmNet.vec3();
                 GlmNet.vec3 DisplayTopLeft = new GlmNet.vec3();
                 GlmNet.vec3 DisplayBottomRight = new GlmNet.vec3();
+                // finds where the point should be displayed and where should be its real location
+                // since resolution, screen size, position and more may change, this should be done
                 GetProjectedPoint(i, ref RealTopLeft, ref RealBottomRight, ref DisplayTopLeft, ref DisplayBottomRight);
 
                 // change the real location of the object
@@ -278,7 +266,7 @@ namespace editor
 
             if (mIsDraggingPanel)
             {
-
+                // most move the camera location and refresh all rendering
             }
         }
 
