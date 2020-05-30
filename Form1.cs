@@ -16,7 +16,7 @@ namespace editor
     public partial class Form1 : Form
     {
         List<IEditorNode> mImages = null;
-        private object mDragObject = null;
+        private IEditorNode mDragObject = null;
         private bool mIsDraggingPanel = false;
         // affects how big the icons should be...
         private int mCameraToBlueprintDistance = 1;
@@ -79,9 +79,7 @@ namespace editor
         {
             if (mDragObject == null)
             {
-                // selects the current object
-                mDragObject = sender;
-                IEditorNode hPicture = (IEditorNode)mDragObject;
+                mDragObject = (IEditorNode)sender;
                 //hPicture.Highlight(PictureNode.eHighlightOptions.Highlight_Border);
             }
         }
@@ -127,17 +125,14 @@ namespace editor
             {
                 if (mDragObject != null)
                 {
-                    // do something complex here, such as animations
-                    IEditorNode i = (IEditorNode)mDragObject;
-
                     // find the cursor position on this application
                     Point screenPoint = PointToClient(new Point(Cursor.Position.X - panel1.Location.X, Cursor.Position.Y - panel1.Location.Y));
 
                     // cast screen to world, considering the current camera configuration
-                    Point pointInWorld = Utilities.ScreenToWorld(screenPoint, i);
-                    
+                    Point pointInWorld = Utilities.ScreenToWorld(screenPoint, mDragObject);
+
                     // update the "real" location of this object in world space
-                    i.Translate(pointInWorld, 1);
+                    mDragObject.Translate(pointInWorld, 1);
                     
                     // flags it to be updated
                     _mustRender = true;
@@ -178,18 +173,10 @@ namespace editor
         /// </summary>
         private void RenderBlueprint()
         {
-            // [out parameters]
-            Point DisplayTopLeft = new Point();
-            Point DisplayBottomRight = new Point();
             // iterate throug all objects and readjust their vertexes according to the current ortho matrix
             foreach (IEditorNode i in mImages)
             {
-                // finds where the point should be displayed and where should be its real location
-                // since resolution, screen size, position and more may change, this should be done
-                Utilities.GetProjectedPoint(i, ref DisplayTopLeft, ref DisplayBottomRight);
-
-                // update the display position of the object
-                i.SetPosition(DisplayTopLeft, DisplayBottomRight);
+                i.Render();
             }
         }
 

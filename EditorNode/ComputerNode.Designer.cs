@@ -119,7 +119,7 @@ namespace editor
             this.Controls.Add(this.radioButton3);
             this.Controls.Add(this.radioButton4);
             this.Name = "ComputerNode";
-            this.Size = new System.Drawing.Size(85, 127);
+            this.Size = new System.Drawing.Size(99, 135);
             this.SizeChanged += new System.EventHandler(this.ComputerNode_SizeChanged);
             this.ResumeLayout(false);
             this.PerformLayout();

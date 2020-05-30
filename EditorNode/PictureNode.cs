@@ -111,6 +111,20 @@ namespace editor
             RealLocation = new Point(newLocation.X , newLocation.Y );
         }
 
+        public void Render()
+        {
+            // [out parameters]
+            Point DisplayTopLeft = new Point();
+            Point DisplayBottomRight = new Point();
+
+            // finds where the point should be displayed and where should be its real location
+            // since resolution, screen size, position and more may change, this should be done
+            Utilities.GetProjectedPoint(this, ref DisplayTopLeft, ref DisplayBottomRight);
+
+            // update the display position of the object
+            SetPosition(DisplayTopLeft, DisplayBottomRight);
+        }
+
         public void Highlight(eHighlightOptions option)
         {
             // do something

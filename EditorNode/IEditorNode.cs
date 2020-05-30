@@ -15,5 +15,7 @@ namespace editor
 
         void Translate(Point newLocation, float viewRatio);
 
+        void Render();
+
     }
 }

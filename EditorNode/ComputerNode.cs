@@ -6,7 +6,7 @@ namespace editor
 {
     public partial class ComputerNode : UserControl
     {
-        private Size mOriginalSize = new Size();
+        private Size mOriginalSize = new Size(85, 130);
         public GlmNet.mat4 GetModel()
         {
             return mModel;
@@ -22,6 +22,20 @@ namespace editor
         {
             // adjust real location according to the resolution ratio
             RealLocation = new Point(newLocation.X, newLocation.Y);
+        }
+
+        public void Render()
+        {
+            // [out parameters]
+            Point DisplayTopLeft = new Point();
+            Point DisplayBottomRight = new Point();
+
+            // finds where the point should be displayed and where should be its real location
+            // since resolution, screen size, position and more may change, this should be done
+            Utilities.GetProjectedPoint(this, ref DisplayTopLeft, ref DisplayBottomRight);
+
+            // update the display position of the object
+            SetPosition(DisplayTopLeft, DisplayBottomRight);
         }
 
 
@@ -58,7 +72,7 @@ namespace editor
             MouseDown += onMouseDown;
             MouseUp += onMouseUp;
             RealLocation = new Point(0, 0);
-            mOriginalSize = RealSize = Size;
+            RealSize = new Size(42, 65);//Size;
             lblComputerName.Text = "comp_"+ _inc++;
 
             Cursor = Cursors.Cross;
@@ -71,13 +85,16 @@ namespace editor
         {
             float resizeOnX = (float)(Size.Width) / mOriginalSize.Width;
             float resizeOnY = (float)(Size.Height) / mOriginalSize.Height;
+            int offsetY = Size.Height / Controls.Count;
             int lastYPosition = 0;
             foreach (Control c in Controls)
             {
                 c.Location = new Point(c.Location.X, lastYPosition);
                 c.Font = new Font(c.Font.FontFamily, 8.25f * resizeOnY, FontStyle.Regular);
-                lastYPosition = c.Location.Y + c.Size.Height + 3;
+                lastYPosition = c.Location.Y + offsetY;
             }
         }
+
+
     }
 }
