@@ -174,36 +174,22 @@ namespace editor
 
         /// <summary>
         /// Based on current camera location, render the objects according to its location.
+        /// https://www.scratchapixel.com/lessons/3d-basic-rendering/computing-pixel-coordinates-of-3d-point/mathematics-computing-2d-coordinates-of-3d-points
         /// </summary>
         private void RenderBlueprint()
         {
-            //render = true;
-            // https://www.scratchapixel.com/lessons/3d-basic-rendering/computing-pixel-coordinates-of-3d-point/mathematics-computing-2d-coordinates-of-3d-points
-
+            // [out parameters]
+            Point DisplayTopLeft = new Point();
+            Point DisplayBottomRight = new Point();
             // iterate throug all objects and readjust their vertexes according to the current ortho matrix
             foreach (IEditorNode i in mImages)
             {
-                // [out parameters]
-                GlmNet.vec3 RealTopLeft = new GlmNet.vec3();
-                GlmNet.vec3 RealBottomRight = new GlmNet.vec3();
-                GlmNet.vec3 DisplayTopLeft = new GlmNet.vec3();
-                GlmNet.vec3 DisplayBottomRight = new GlmNet.vec3();
                 // finds where the point should be displayed and where should be its real location
                 // since resolution, screen size, position and more may change, this should be done
-                Utilities.GetProjectedPoint(i, ref RealTopLeft, ref RealBottomRight, ref DisplayTopLeft, ref DisplayBottomRight);
+                Utilities.GetProjectedPoint(i, ref DisplayTopLeft, ref DisplayBottomRight);
 
-                // change the real location of the object
-               // i.Move(new Point((int)RealTopLeft.x, (int)RealTopLeft.y), 1);
                 // update the display position of the object
-
-                if (render)
-                {
-                    i.SetPosition(DisplayTopLeft, DisplayBottomRight);
-                }
-
-
-                //System.Console.WriteLine("Display : TL: " + DisplayTopLeft.ToString() + "          BR: " + DisplayBottomRight.ToString());
-                //System.Console.WriteLine("Real    : TL: " + RealTopLeft.ToString() + "          BR: " + RealTopLeft.ToString());
+                i.SetPosition(DisplayTopLeft, DisplayBottomRight);
             }
         }
 

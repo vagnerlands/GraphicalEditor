@@ -11,7 +11,7 @@ namespace editor
 
         mat4 GetModel();
 
-        void SetPosition(vec3 upperLeft, vec3 bottomRight);
+        void SetPosition(Point upperLeft, Point bottomRight);
 
         void Translate(Point newLocation, float viewRatio);
 

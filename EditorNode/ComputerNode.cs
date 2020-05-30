@@ -12,10 +12,10 @@ namespace editor
             return mModel;
         }
 
-        public void SetPosition(GlmNet.vec3 upperLeft, GlmNet.vec3 bottomRight)
+        public void SetPosition(Point upperLeft, Point bottomRight)
         {
-            Size = new Size((int)(bottomRight.x - upperLeft.x), (int)(bottomRight.y - upperLeft.y));
-            Location = new Point((int)upperLeft.x - Size.Width / 2, (int)upperLeft.y - Size.Height / 2);
+            Size = new Size(bottomRight.X - upperLeft.X, bottomRight.Y - upperLeft.Y);
+            Location = new Point(upperLeft.X - Size.Width / 2, upperLeft.Y - Size.Height / 2);
         }
 
         public void Translate(Point newLocation, float viewRatio)

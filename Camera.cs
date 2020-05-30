@@ -1,5 +1,4 @@
-﻿using System;
-using GlmNet;
+﻿using GlmNet;
 
 namespace editor
 {
@@ -24,7 +23,7 @@ namespace editor
         private mat4 mWorldToCamera;
         // recalculate the matrices
         private bool mNeedToRecalculate = false;
-
+        // singleton object
         static private Camera sInstance = null;
 
         static public Camera Instance()
@@ -201,7 +200,7 @@ namespace editor
         /// <param name="bottomRight"> bottom right display location [input]</param>
         /// <param name="RealTopLeft">top left real world location [out]</param>
         /// <param name="RealBottomRight">bottom right real world location [out]</param>
-        internal void FromPixelToWorld(vec3 topLeft, vec3 bottomRight, ref vec3 RealTopLeft, ref vec3 RealBottomRight)
+        internal void WorldToPixel(vec3 topLeft, vec3 bottomRight, ref vec3 RealTopLeft, ref vec3 RealBottomRight)
         {
             float a, b, c, w;
 
@@ -209,13 +208,13 @@ namespace editor
             b = topLeft[0] * mWorldToCamera[0][1] + topLeft[1] * mWorldToCamera[1][1] + topLeft[2] * mWorldToCamera[2][1] + mWorldToCamera[3][1];
             c = topLeft[0] * mWorldToCamera[0][2] + topLeft[1] * mWorldToCamera[1][2] + topLeft[2] * mWorldToCamera[2][2] + mWorldToCamera[3][2];
             w = topLeft[0] * mWorldToCamera[0][3] + topLeft[1] * mWorldToCamera[1][3] + topLeft[2] * mWorldToCamera[2][3] + mWorldToCamera[3][3];
-            RealTopLeft = new GlmNet.vec3(a / w, b / w, c / w);
+            RealTopLeft = new vec3(a / w, b / w, c / w);
 
             a = bottomRight[0] * mWorldToCamera[0][0] + bottomRight[1] * mWorldToCamera[1][0] + bottomRight[2] * mWorldToCamera[2][0] + mWorldToCamera[3][0];
             b = bottomRight[0] * mWorldToCamera[0][1] + bottomRight[1] * mWorldToCamera[1][1] + bottomRight[2] * mWorldToCamera[2][1] + mWorldToCamera[3][1];
             c = bottomRight[0] * mWorldToCamera[0][2] + bottomRight[1] * mWorldToCamera[1][2] + bottomRight[2] * mWorldToCamera[2][2] + mWorldToCamera[3][2];
             w = bottomRight[0] * mWorldToCamera[0][3] + bottomRight[1] * mWorldToCamera[1][3] + bottomRight[2] * mWorldToCamera[2][3] + mWorldToCamera[3][3];
-            RealBottomRight = new GlmNet.vec3(a / w, b / w, c / w);
+            RealBottomRight = new vec3(a / w, b / w, c / w);
         }
     }
 }
