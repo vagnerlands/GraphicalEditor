@@ -49,23 +49,34 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EditorNode\BaseEditorNode.cs" />
     <Compile Include="Camera.cs" />
     <Compile Include="Common.cs" />
+    <Compile Include="EditorNode\ComputerNode.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="EditorNode\ComputerNode.Designer.cs">
+      <DependentUpon>ComputerNode.cs</DependentUpon>
+    </Compile>
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="EditorNode\IEditorNode.cs" />
     <Compile Include="PanelDoubleBuffered.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="PictureNode.cs">
+    <Compile Include="EditorNode\PictureNode.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities.cs" />
+    <EmbeddedResource Include="EditorNode\ComputerNode.resx">
+      <DependentUpon>ComputerNode.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>

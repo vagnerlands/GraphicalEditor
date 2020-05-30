@@ -33,12 +33,13 @@
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.trackBar1 = new System.Windows.Forms.TrackBar();
             this.trackBar1Display = new System.Windows.Forms.Label();
-            this.panel1 = new editor.PanelDoubleBuffered();
             this.btnUp = new System.Windows.Forms.Button();
             this.btnRight = new System.Windows.Forms.Button();
             this.btnDown = new System.Windows.Forms.Button();
             this.btnLeft = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.panel1 = new editor.PanelDoubleBuffered();
+            this.btnOrigin = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             this.panel2.SuspendLayout();
             this.SuspendLayout();
@@ -86,6 +87,65 @@
             this.trackBar1Display.TabIndex = 3;
             this.trackBar1Display.Text = "label1";
             // 
+            // btnUp
+            // 
+            this.btnUp.Location = new System.Drawing.Point(25, 3);
+            this.btnUp.Name = "btnUp";
+            this.btnUp.Size = new System.Drawing.Size(20, 20);
+            this.btnUp.TabIndex = 2;
+            this.btnUp.Text = "U";
+            this.btnUp.UseVisualStyleBackColor = true;
+            this.btnUp.MouseDown += new System.Windows.Forms.MouseEventHandler(this.btnUp_MouseDown);
+            this.btnUp.MouseUp += new System.Windows.Forms.MouseEventHandler(this.btnUp_MouseUp);
+            // 
+            // btnRight
+            // 
+            this.btnRight.Location = new System.Drawing.Point(44, 20);
+            this.btnRight.Name = "btnRight";
+            this.btnRight.Size = new System.Drawing.Size(20, 20);
+            this.btnRight.TabIndex = 4;
+            this.btnRight.Text = "R";
+            this.btnRight.UseVisualStyleBackColor = true;
+            this.btnRight.MouseDown += new System.Windows.Forms.MouseEventHandler(this.btnRight_MouseDown);
+            this.btnRight.MouseUp += new System.Windows.Forms.MouseEventHandler(this.btnRight_MouseUp);
+            // 
+            // btnDown
+            // 
+            this.btnDown.Location = new System.Drawing.Point(25, 37);
+            this.btnDown.Name = "btnDown";
+            this.btnDown.Size = new System.Drawing.Size(20, 20);
+            this.btnDown.TabIndex = 5;
+            this.btnDown.Text = "D";
+            this.btnDown.UseVisualStyleBackColor = true;
+            this.btnDown.MouseDown += new System.Windows.Forms.MouseEventHandler(this.btnDown_MouseDown);
+            this.btnDown.MouseUp += new System.Windows.Forms.MouseEventHandler(this.btnDown_MouseUp);
+            // 
+            // btnLeft
+            // 
+            this.btnLeft.Location = new System.Drawing.Point(5, 20);
+            this.btnLeft.Name = "btnLeft";
+            this.btnLeft.Size = new System.Drawing.Size(20, 20);
+            this.btnLeft.TabIndex = 3;
+            this.btnLeft.Text = "L";
+            this.btnLeft.UseVisualStyleBackColor = true;
+            this.btnLeft.MouseDown += new System.Windows.Forms.MouseEventHandler(this.btnLeft_MouseDown);
+            this.btnLeft.MouseUp += new System.Windows.Forms.MouseEventHandler(this.btnLeft_MouseUp);
+            // 
+            // panel2
+            // 
+            this.panel2.BackColor = System.Drawing.Color.Sienna;
+            this.panel2.BackgroundImage = global::editor.Properties.Resources.grunge_texture_2226815_1280;
+            this.panel2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.panel2.Controls.Add(this.btnOrigin);
+            this.panel2.Controls.Add(this.btnLeft);
+            this.panel2.Controls.Add(this.btnRight);
+            this.panel2.Controls.Add(this.btnUp);
+            this.panel2.Controls.Add(this.btnDown);
+            this.panel2.Location = new System.Drawing.Point(12, 41);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(182, 61);
+            this.panel2.TabIndex = 7;
+            // 
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
@@ -102,59 +162,17 @@
             this.panel1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseMove);
             this.panel1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseUp);
             // 
-            // btnUp
+            // btnOrigin
             // 
-            this.btnUp.Location = new System.Drawing.Point(25, 3);
-            this.btnUp.Name = "btnUp";
-            this.btnUp.Size = new System.Drawing.Size(20, 20);
-            this.btnUp.TabIndex = 2;
-            this.btnUp.Text = "U";
-            this.btnUp.UseVisualStyleBackColor = true;
-            this.btnUp.Click += new System.EventHandler(this.btnUp_Click);
-            // 
-            // btnRight
-            // 
-            this.btnRight.Location = new System.Drawing.Point(44, 20);
-            this.btnRight.Name = "btnRight";
-            this.btnRight.Size = new System.Drawing.Size(20, 20);
-            this.btnRight.TabIndex = 4;
-            this.btnRight.Text = "R";
-            this.btnRight.UseVisualStyleBackColor = true;
-            this.btnRight.Click += new System.EventHandler(this.btnRight_Click);
-            // 
-            // btnDown
-            // 
-            this.btnDown.Location = new System.Drawing.Point(25, 37);
-            this.btnDown.Name = "btnDown";
-            this.btnDown.Size = new System.Drawing.Size(20, 20);
-            this.btnDown.TabIndex = 5;
-            this.btnDown.Text = "D";
-            this.btnDown.UseVisualStyleBackColor = true;
-            this.btnDown.Click += new System.EventHandler(this.btnDown_Click);
-            // 
-            // btnLeft
-            // 
-            this.btnLeft.Location = new System.Drawing.Point(5, 20);
-            this.btnLeft.Name = "btnLeft";
-            this.btnLeft.Size = new System.Drawing.Size(20, 20);
-            this.btnLeft.TabIndex = 3;
-            this.btnLeft.Text = "L";
-            this.btnLeft.UseVisualStyleBackColor = true;
-            this.btnLeft.Click += new System.EventHandler(this.btnLeft_Click);
-            // 
-            // panel2
-            // 
-            this.panel2.BackColor = System.Drawing.Color.Sienna;
-            this.panel2.BackgroundImage = global::editor.Properties.Resources.grunge_texture_2226815_1280;
-            this.panel2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.panel2.Controls.Add(this.btnLeft);
-            this.panel2.Controls.Add(this.btnRight);
-            this.panel2.Controls.Add(this.btnUp);
-            this.panel2.Controls.Add(this.btnDown);
-            this.panel2.Location = new System.Drawing.Point(12, 41);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(69, 61);
-            this.panel2.TabIndex = 7;
+            this.btnOrigin.BackColor = System.Drawing.Color.SteelBlue;
+            this.btnOrigin.Location = new System.Drawing.Point(86, 3);
+            this.btnOrigin.Margin = new System.Windows.Forms.Padding(1);
+            this.btnOrigin.Name = "btnOrigin";
+            this.btnOrigin.Size = new System.Drawing.Size(93, 21);
+            this.btnOrigin.TabIndex = 0;
+            this.btnOrigin.Text = "Back to Origin";
+            this.btnOrigin.UseVisualStyleBackColor = false;
+            this.btnOrigin.Click += new System.EventHandler(this.btnOrigin_Click);
             // 
             // Form1
             // 
@@ -191,6 +209,7 @@
         private System.Windows.Forms.Button btnDown;
         private System.Windows.Forms.Button btnLeft;
         private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Button btnOrigin;
     }
 }
 

@@ -5,6 +5,7 @@ namespace editor
 {
     class Camera
     {
+        vec3 cOriginPosition = new vec3(0, 0, 10);
         // view port - rendering plane
         vec4 mViewport;
         // camera position
@@ -24,15 +25,60 @@ namespace editor
         // recalculate the matrices
         private bool mNeedToRecalculate = false;
 
-        public Camera()
+        static private Camera sInstance = null;
+
+        static public Camera Instance()
         {
-            mPosition = new vec3(0, 0, 10);
+            if (sInstance == null)
+            {
+                sInstance = new Camera();
+            }
+
+            return sInstance;
+        }
+
+        private Camera()
+        {
+            mPosition = cOriginPosition;
             mTarget = new vec3(0, 0, 0);
             mUp = new vec3(0, 1, 0);
             mLookAt = mat4.identity() ;
             mViewport = new vec4(0,0,1,1);
             mOrtho = mat4.identity();
             mWorldToCamera = mat4.identity();
+            mNeedToRecalculate = true;
+        }
+
+        public void SetToOriginPosition()
+        {
+            mPosition = cOriginPosition;
+            mTarget = new vec3(0, 0, 0);
+            mNeedToRecalculate = true;
+            // explicitly calls the recalculate method
+            //recalculate();
+        }
+
+        public void SetCameraPositionX(float xPosition)
+        {
+            mPosition.x = xPosition;
+            mNeedToRecalculate = true;
+        }
+
+        public void SetCameraPositionY(float yPosition)
+        {
+            mPosition.y = yPosition;
+            mNeedToRecalculate = true;
+        }
+
+        public void SetCameraPositionZ(float zPosition)
+        {
+            mPosition.z = zPosition;
+            mNeedToRecalculate = true;
+        }
+
+        public void SetCameraPosition(vec3 position)
+        {
+            mPosition = position;
             mNeedToRecalculate = true;
         }
 
@@ -51,6 +97,12 @@ namespace editor
         public void MoveCameraOnZ(float distance)
         {
             mPosition.z += distance;
+            mNeedToRecalculate = true;
+        }
+
+        public void MoveCamera(vec3 distance)
+        {
+            mPosition += distance;
             mNeedToRecalculate = true;
         }
 
@@ -119,7 +171,7 @@ namespace editor
             return mViewport;
         }
 
-        public void recalculate()
+        private void recalculate()
         {
             if (mNeedToRecalculate)
             {
