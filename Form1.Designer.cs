@@ -38,10 +38,14 @@
             this.btnDown = new System.Windows.Forms.Button();
             this.btnLeft = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.panel1 = new editor.PanelDoubleBuffered();
             this.btnOrigin = new System.Windows.Forms.Button();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.mCSToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.graphicsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.panel1 = new editor.PanelDoubleBuffered();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             this.panel2.SuspendLayout();
+            this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // button1
@@ -146,6 +150,40 @@
             this.panel2.Size = new System.Drawing.Size(182, 61);
             this.panel2.TabIndex = 7;
             // 
+            // btnOrigin
+            // 
+            this.btnOrigin.BackColor = System.Drawing.Color.SteelBlue;
+            this.btnOrigin.Location = new System.Drawing.Point(86, 3);
+            this.btnOrigin.Margin = new System.Windows.Forms.Padding(1);
+            this.btnOrigin.Name = "btnOrigin";
+            this.btnOrigin.Size = new System.Drawing.Size(93, 21);
+            this.btnOrigin.TabIndex = 0;
+            this.btnOrigin.Text = "Back to Origin";
+            this.btnOrigin.UseVisualStyleBackColor = false;
+            this.btnOrigin.Click += new System.EventHandler(this.btnOrigin_Click);
+            // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mCSToolStripMenuItem,
+            this.graphicsToolStripMenuItem});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 70);
+            // 
+            // mCSToolStripMenuItem
+            // 
+            this.mCSToolStripMenuItem.Name = "mCSToolStripMenuItem";
+            this.mCSToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.mCSToolStripMenuItem.Text = "MCS";
+            this.mCSToolStripMenuItem.Click += new System.EventHandler(this.mCSToolStripMenuItem_Click);
+            // 
+            // graphicsToolStripMenuItem
+            // 
+            this.graphicsToolStripMenuItem.Name = "graphicsToolStripMenuItem";
+            this.graphicsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.graphicsToolStripMenuItem.Text = "Graphics";
+            this.graphicsToolStripMenuItem.Click += new System.EventHandler(this.graphicsToolStripMenuItem_Click);
+            // 
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
@@ -161,18 +199,6 @@
             this.panel1.MouseLeave += new System.EventHandler(this.panel1_MouseLeave);
             this.panel1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseMove);
             this.panel1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseUp);
-            // 
-            // btnOrigin
-            // 
-            this.btnOrigin.BackColor = System.Drawing.Color.SteelBlue;
-            this.btnOrigin.Location = new System.Drawing.Point(86, 3);
-            this.btnOrigin.Margin = new System.Windows.Forms.Padding(1);
-            this.btnOrigin.Name = "btnOrigin";
-            this.btnOrigin.Size = new System.Drawing.Size(93, 21);
-            this.btnOrigin.TabIndex = 0;
-            this.btnOrigin.Text = "Back to Origin";
-            this.btnOrigin.UseVisualStyleBackColor = false;
-            this.btnOrigin.Click += new System.EventHandler(this.btnOrigin_Click);
             // 
             // Form1
             // 
@@ -192,6 +218,7 @@
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyUp);
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
             this.panel2.ResumeLayout(false);
+            this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -210,6 +237,9 @@
         private System.Windows.Forms.Button btnLeft;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Button btnOrigin;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem mCSToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem graphicsToolStripMenuItem;
     }
 }
 

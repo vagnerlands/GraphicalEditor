@@ -83,6 +83,8 @@ namespace editor
 
         private void ComputerNode_SizeChanged(object sender, EventArgs e)
         {
+            if (Size.Height < 1)
+                return;
             float resizeOnX = (float)(Size.Width) / mOriginalSize.Width;
             float resizeOnY = (float)(Size.Height) / mOriginalSize.Height;
             int offsetY = Size.Height / Controls.Count;

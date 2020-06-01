@@ -60,19 +60,8 @@ namespace editor
 
         private void button1_Click(object sender, EventArgs e)
         {
-            // create new icon and push to the database
-            //PictureNode newPic = new PictureNode(
-            //    Properties.Resources.laptop, 
-            //    new Point(0,0), 
-            //    new Size(40,40), 
-            //    new MouseEventHandler(pictureBox1_MouseDown), 
-            //    new MouseEventHandler(panel1_MouseUp));
-
-            IEditorNode newPic = new ComputerNode(new MouseEventHandler(pictureBox1_MouseDown), new MouseEventHandler(panel1_MouseUp));
-            // keeps a reference for manipulation, animations and so on...
-            mImages.Add(newPic);
-            //refreshMatrices();
-            RenderBlueprint();
+            // show menu on screen
+            contextMenuStrip1.Show(Cursor.Position);
         }
 
         private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
@@ -342,10 +331,36 @@ namespace editor
         {
             // reset the zoom 
             mCameraToBlueprintDistance = 1;
+            // adjust trackbar
+            trackBar1.Value = mCameraToBlueprintDistance;
             // moves the camera back to origin position
             Camera.Instance().SetToOriginPosition();
 
             _mustRender = true;
+        }
+
+        private void mCSToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            IEditorNode newPic = new ComputerNode(new MouseEventHandler(pictureBox1_MouseDown), new MouseEventHandler(panel1_MouseUp));
+            // keeps a reference for manipulation, animations and so on...
+            mImages.Add(newPic);
+            //refreshMatrices();
+            RenderBlueprint();
+        }
+
+        private void graphicsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // create new icon and push to the database
+            PictureNode newPic = new PictureNode(
+                Properties.Resources.laptop,
+                new Point(0, 0),
+                new Size(40, 40),
+                new MouseEventHandler(pictureBox1_MouseDown),
+                new MouseEventHandler(panel1_MouseUp));
+            // keeps a reference for manipulation, animations and so on...
+            mImages.Add(newPic);
+            //refreshMatrices();
+            RenderBlueprint();
         }
     }
 }
